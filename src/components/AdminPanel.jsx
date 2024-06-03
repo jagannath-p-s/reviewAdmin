@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../supabase";
 import { FaSearch, FaSortUp, FaSortDown } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
+import 'tailwindcss/tailwind.css';
 
 const AdminPanel = () => {
   const [salesmen, setSalesmen] = useState([]);
@@ -9,9 +9,10 @@ const AdminPanel = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const fetchSalesmen = async () => {
+    setLoading(true);
     try {
       const { data, error } = await supabase
         .from("salesmen")
@@ -25,6 +26,8 @@ const AdminPanel = () => {
       }
     } catch (error) {
       console.error("Error fetching salesmen:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,105 +69,64 @@ const AdminPanel = () => {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminLoggedIn');
-    navigate('/admin-login');
-  };
-
   const filteredSalesmen = salesmen.filter((salesman) =>
     salesman.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-4">
-        <img src="logo.png" alt="Company Logo" className="h-16" /> {/* Adjust logo path */}
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-red-600 transition-colors duration-150"
-        >
-          Logout
-        </button>
+    <div className="min-h-screen p-4 pt-20 bg-white">
+      <div className="text-center mb-8">
+        <img src="logo.png" alt="Company Logo" className="mx-auto w-24 h-auto mb-4" />
+        <h1 className="text-3xl font-bold text-gray-800">Review Count Table</h1>
+        <p className="text-gray-600">Powered by White Tap</p>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md mb-4">
-        <h1 className="text-2xl font-bold mb-4 text-center">Review Count Table</h1>
-        <p className="text-center">Powered by White Tap</p>
-      </div>
+      <div className="lg:flex lg:items-center lg:justify-between lg:mb-8 sticky top-16 z-10 p-4 bg-white rounded-lg">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 lg:mb-0 lg:space-x-4 w-full">
+          <div className="relative mb-4 md:mb-0 flex-grow">
+            <input
+              type="text"
+              className="border rounded-lg py-2 px-4 w-full focus:outline-none focus:ring focus:border-blue-300"
+              placeholder="Search by name"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
+              <FaSearch />
+            </span>
+          </div>
 
-      <div className="flex flex-wrap justify-between items-center mb-4">
-        <div className="relative w-full sm:w-1/4 mb-4 sm:mb-0">
-          <input
-            type="text"
-            className="border rounded-lg p-3 w-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Search by name"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <span className="absolute right-3 top-3 text-gray-500">
-            <FaSearch />
-          </span>
+      
+
+          <button
+            onClick={toggleSortOrder}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center"
+          >
+            {sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
+            <span className="ml-2">Sort by Points</span>
+          </button>
         </div>
-
-        <div className="relative w-full sm:w-1/4 mb-4 sm:mb-0">
-          <input
-            type="date"
-            className="border rounded-lg p-3 w-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Filter by start date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-        </div>
-
-        <div className="relative w-full sm:w-1/4 mb-4 sm:mb-0">
-          <input
-            type="date"
-            className="border rounded-lg p-3 w-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Filter by end date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
-        </div>
-
-        <button
-          onClick={toggleSortOrder}
-          className="bg-blue-500 text-white flex items-center px-5 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-150"
-        >
-          {sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
-          <span className="ml-2">Sort by Points</span>
-        </button>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-lg">
-        <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
-          <thead className="bg-blue-600 text-white">
-            <tr>
-              <th className="whitespace-nowrap px-6 py-4 font-medium text-left">
-                Salesman Name
-              </th>
-              <th className="whitespace-nowrap px-6 py-4 font-medium text-left">
-                Points
-              </th>
-            </tr>
-          </thead>
-
-          <tbody className="divide-y divide-gray-200">
-            {filteredSalesmen.map((salesman) => (
-              <tr
-                key={salesman.id}
-                className="bg-white hover:bg-gray-100 transition-colors duration-150"
-              >
-                <td className="px-6 py-4 font-medium text-gray-900">
-                  {salesman.name}
-                </td>
-                <td className="px-6 py-4 text-gray-700">
-                  {salesman.points}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="loader">Loading...</div>
+        </div>
+      ) : filteredSalesmen.length === 0 ? (
+        <div className="text-center text-gray-500">No salesmen found</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredSalesmen.map((salesman) => (
+            <div
+              key={salesman.id}
+              className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow"
+            >
+              <h2 className="text-xl font-bold text-gray-800">{salesman.name}</h2>
+              <p className="text-gray-600">Points: {salesman.points}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

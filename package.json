@@ -4,20 +4,28 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
     "@material-tailwind/react": "^2.1.9",
-    "@supabase/supabase-js": "^2.43.1",
+    "@supabase/supabase-js": "^2.43.4",
+    "chart.js": "^4.4.3",
+    "date-fns": "^3.6.0",
+    "echarts": "^5.5.0",
+    "echarts-for-react": "^3.0.2",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-date-picker": "^11.0.0",
+    "react-datepicker": "^6.9.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^5.2.0",
+    "react-icons": "^5.2.1",
     "react-responsive": "^10.0.0",
-    "react-router-dom": "^6.23.0"
+    "react-router-dom": "^6.23.1",
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
