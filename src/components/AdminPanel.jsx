@@ -7,6 +7,8 @@ const AdminPanel = () => {
   const [salesmen, setSalesmen] = useState([]);
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const navigate = useNavigate();
 
   const fetchSalesmen = async () => {
@@ -75,9 +77,23 @@ const AdminPanel = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-4xl font-bold mb-6 text-center">Admin Panel</h1>
-      <div className="flex flex-wrap justify-between items-center mb-6">
-        <div className="relative w-full sm:w-1/2 lg:w-1/3 mb-4 sm:mb-0">
+      <div className="flex justify-between items-center mb-4">
+        <img src="logo.png" alt="Company Logo" className="h-16" /> {/* Adjust logo path */}
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-red-600 transition-colors duration-150"
+        >
+          Logout
+        </button>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow-md mb-4">
+        <h1 className="text-2xl font-bold mb-4 text-center">Review Count Table</h1>
+        <p className="text-center">Powered by White Tap</p>
+      </div>
+
+      <div className="flex flex-wrap justify-between items-center mb-4">
+        <div className="relative w-full sm:w-1/4 mb-4 sm:mb-0">
           <input
             type="text"
             className="border rounded-lg p-3 w-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -90,19 +106,32 @@ const AdminPanel = () => {
           </span>
         </div>
 
+        <div className="relative w-full sm:w-1/4 mb-4 sm:mb-0">
+          <input
+            type="date"
+            className="border rounded-lg p-3 w-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Filter by start date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </div>
+
+        <div className="relative w-full sm:w-1/4 mb-4 sm:mb-0">
+          <input
+            type="date"
+            className="border rounded-lg p-3 w-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Filter by end date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+        </div>
+
         <button
           onClick={toggleSortOrder}
           className="bg-blue-500 text-white flex items-center px-5 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-150"
         >
           {sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
           <span className="ml-2">Sort by Points</span>
-        </button>
-        
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 text-white px-5 py-3 rounded-lg shadow-md hover:bg-red-600 transition-colors duration-150"
-        >
-          Logout
         </button>
       </div>
 
